@@ -61,6 +61,13 @@ def get_categories():
         item.SetLabel('Link Account'.encode('utf-8'))
         item.SetProperty('id', 'link'.encode('utf-8'))
         categories.append(item)
+    else:
+        # We have a linked account. Add a toggle for HD.
+        hd = mc.GetApp().GetLocalConfig().GetValue('hd')
+        item = mc.ListItem(mc.ListItem.MEDIA_UNKNOWN)
+        item.SetLabel('Toggle HD'.encode('utf-8'))
+        item.SetProperty('id', 'hd'.encode('utf-8'))
+        categories.append(item)
 
     return categories
 
@@ -136,8 +143,10 @@ def get_videos(cat_id):
     videos = mc.ListItems()
 
     border = 'bg_imgFlare_640x360.png'.encode('utf-8')
+    # get the hd boolean value
+    hd = mc.GetApp().GetLocalConfig().GetValue('hd')
     for vid in video_data:
-        if 'hd_url' in vid:
+        if 'hd_url' in vid and hd:
             url = vid['hd_url'] + '&api_key=' + API_KEY
         else:
             url = vid['high_url']
